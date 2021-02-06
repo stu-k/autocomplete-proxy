@@ -10,14 +10,14 @@ func StatusController(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "ok")
 }
 
-func UsersController(users userGetter) func(http.ResponseWriter, *http.Request) {
+func UsersController(userAPI userGetter) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		queries, ok := req.URL.Query()["search"]
 		if !ok {
 			queries = []string{""}
 		}
 
-		usersJSON, err := users.Search(queries[0])
+		usersJSON, err := userAPI.Search(queries[0])
 		if err != nil {
 			log.Print(err)
 			w.WriteHeader(http.StatusInternalServerError)
