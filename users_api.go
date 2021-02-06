@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -25,8 +24,6 @@ func (api UserAPI) Search(term string) (users Users, err error) {
 	if err != nil {
 		return nil, fmt.Errorf("get users: error creating request: %v", err)
 	}
-
-	log.Printf("searching for term %q", term)
 
 	q := r.URL.Query()
 	q.Add("search", term)
