@@ -1,13 +1,13 @@
 package main
 
 import (
-	"testing"
 	"reflect"
+	"testing"
 )
 
 func TestUsersRefine(t *testing.T) {
-	tt := []struct{
-		name, term string
+	tt := []struct {
+		name, term  string
 		users, want Users
 	}{
 		{
@@ -66,7 +66,7 @@ func TestUsersRefine(t *testing.T) {
 		},
 	}
 
-	for _, tc := range(tt) {
+	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
 			got := tc.users.Refine(tc.term)
 			if !reflect.DeepEqual(tc.want, got) {

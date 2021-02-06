@@ -14,7 +14,7 @@ type UserAPI struct {
 func NewUserAPI(url, port string) UserAPI {
 	return UserAPI{
 		Port: port,
-		URL: url,
+		URL:  url,
 	}
 }
 

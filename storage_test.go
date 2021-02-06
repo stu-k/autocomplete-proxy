@@ -17,7 +17,7 @@ var userSet2 = Users{
 }
 
 type mockUserGetter struct {
-	used bool
+	used    bool
 	userSet Users
 }
 
@@ -33,38 +33,38 @@ func (mock *mockUserGetter) Search(_ string) (Users, error) {
 }
 
 func TestStorageSearch(t *testing.T) {
-	tt := []struct{
-		name, term string
-		cacheExpiry time.Duration
-		users Users
+	tt := []struct {
+		name, term               string
+		cacheExpiry              time.Duration
+		users                    Users
 		fetcherUsed, injectCache bool
 	}{
 		{
-			name: "fetches when data not cached",
-			term: "test",
+			name:        "fetches when data not cached",
+			term:        "test",
 			cacheExpiry: 0 * time.Second,
-			users: userSet1,
+			users:       userSet1,
 			fetcherUsed: true,
 			injectCache: false,
 		},
 		{
-			name: "uses cached data when present",
-			term: "test",
+			name:        "uses cached data when present",
+			term:        "test",
 			cacheExpiry: 9999 * time.Hour,
-			users: userSet1,
+			users:       userSet1,
 			fetcherUsed: false,
 			injectCache: true,
 		},
 	}
 
-	for _, tc := range(tt) {
+	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
 			mockFetcher := NewMockUserGetter()
 			storage := NewStorage(mockFetcher, tc.cacheExpiry)
 			if tc.injectCache {
 				storage.cache[tc.term] = UserCache{
 					createdAt: time.Now(),
-					users: tc.users,
+					users:     tc.users,
 				}
 			}
 

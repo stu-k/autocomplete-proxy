@@ -8,7 +8,7 @@ import (
 
 type UserCache struct {
 	createdAt time.Time
-	users Users
+	users     Users
 }
 
 func (uc UserCache) Expired(now time.Time, expiry time.Duration) bool {
@@ -16,17 +16,17 @@ func (uc UserCache) Expired(now time.Time, expiry time.Duration) bool {
 }
 
 type Storage struct {
-	cache map[string]UserCache
+	cache       map[string]UserCache
 	cacheExpiry time.Duration
-	mu sync.Mutex
-	fetcher userGetter
+	mu          sync.Mutex
+	fetcher     userGetter
 }
 
 func NewStorage(fetcher userGetter, cacheExpiry time.Duration) Storage {
 	return Storage{
-		cache: make(map[string]UserCache),
+		cache:       make(map[string]UserCache),
 		cacheExpiry: cacheExpiry,
-		fetcher: fetcher,
+		fetcher:     fetcher,
 	}
 }
 
@@ -52,7 +52,7 @@ func (s Storage) Search(term string) (Users, error) {
 
 	s.cache[term] = UserCache{
 		createdAt: time.Now(),
-		users: users,
+		users:     users,
 	}
 
 	return users, nil

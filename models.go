@@ -7,9 +7,9 @@ import (
 )
 
 type User struct {
-	ID int `json:"id"`
+	ID    int    `json:"id"`
 	Email string `json:"email"`
-	Name string `json:"name"`
+	Name  string `json:"name"`
 }
 
 type Users []User
@@ -18,9 +18,9 @@ func (u Users) Refine(term string) (result Users) {
 	emailMatches, otherMatches := Users{}, Users{}
 
 	termL := strings.ToLower(term)
-	for _, user := range(u) {
+	for _, user := range u {
 		nameL := strings.ToLower(user.Name)
-		for _, namePart := range(strings.Split(nameL, " ")) {
+		for _, namePart := range strings.Split(nameL, " ") {
 			if namePart == termL {
 				result = append(result, user)
 				break
@@ -28,7 +28,7 @@ func (u Users) Refine(term string) (result Users) {
 		}
 
 		// Prevent a user with a name match from being added again
-		if len(result) > 0 && result[len(result) - 1].ID == user.ID {
+		if len(result) > 0 && result[len(result)-1].ID == user.ID {
 			continue
 		}
 
