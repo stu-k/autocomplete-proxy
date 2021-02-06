@@ -17,11 +17,21 @@ func TestUsersRefine(t *testing.T) {
 				{ID: 1, Name: "Aldous Huxley", Email: "happyhappy@soma.org"},
 				{ID: 2, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
 				{ID: 3, Name: "George Orwell", Email: "bbfan@peepme.gov"},
-				{ID: 4, Name: "Marsha B", Email: "mbrady@jansux.com"},
 			},
 			want: Users{
 				{ID: 2, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
-				{ID: 4, Name: "Marsha B", Email: "mbrady@jansux.com"},
+			},
+		},
+		{
+			name: "prioritizes full name matches first",
+			term: "Brad",
+			users: Users{
+				{ID: 1, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
+				{ID: 2, Name: "Brad Pitt", Email: "joeblack@reepr.gov"},
+			},
+			want: Users{
+				{ID: 2, Name: "Brad Pitt", Email: "joeblack@reepr.gov"},
+				{ID: 1, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
 			},
 		},
 	}

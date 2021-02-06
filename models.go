@@ -15,14 +15,29 @@ type User struct {
 type Users []User
 
 func (u Users) Refine(term string) (result Users) {
+	otherMatches := Users{}
+
 	termL := strings.ToLower(term)
 	for _, user := range(u) {
 		nameL := strings.ToLower(user.Name)
+		for _, namePart := range(strings.Split(nameL, " ")) {
+			if namePart == termL {
+				result = append(result, user)
+				break
+			}
+		}
+
+		// Prevent a user with a name match from being added again
+		if len(result) > 0 && result[len(result) - 1].ID == user.ID {
+			continue
+		}
+
 		if strings.Contains(nameL, termL) || strings.Contains(user.Email, termL) {
-			result = append(result, user)
+			otherMatches = append(otherMatches, user)
 		}
 	}
-	return result
+
+	return append(result, otherMatches...)
 }
 
 func (u Users) JSON() (string, error) {
