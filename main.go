@@ -1,3 +1,4 @@
+// TODO: use env vars for API url, ports, cache expiry
 package main
 
 import (

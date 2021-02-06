@@ -22,7 +22,7 @@ func (api UserAPI) Search(term string) (users Users, err error) {
 	uri := fmt.Sprintf("%s:%s", api.URL, api.Port)
 	r, err := http.NewRequest(http.MethodGet, uri, nil)
 	if err != nil {
-		return nil, fmt.Errorf("get users: error creating request: %v", err)
+		return nil, fmt.Errorf("UserAPI.Search: error creating request: %v", err)
 	}
 
 	q := r.URL.Query()
@@ -31,17 +31,17 @@ func (api UserAPI) Search(term string) (users Users, err error) {
 
 	res, err := http.DefaultClient.Do(r)
 	if err != nil {
-		return nil, fmt.Errorf("get users: error making request: %v", err)
+		return nil, fmt.Errorf("UserAPI.Search: error making request: %v", err)
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("get users: error reading request body: %v", err)
+		return nil, fmt.Errorf("UserAPI.Search: error reading request body: %v", err)
 	}
 
 	if err := json.Unmarshal(body, &users); err != nil {
-		return nil, fmt.Errorf("get users: error unmarshaling JSON: %v", err)
+		return nil, fmt.Errorf("UserAPI.Search: error unmarshaling JSON: %v", err)
 	}
 
 	return users, nil
