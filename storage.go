@@ -30,6 +30,10 @@ func (s Storage) Search(term string) (Users, error) {
 		return nil, err
 	}
 
+	if term != "" {
+		users = users.Refine(term)
+	}
+
 	s.cache[term] = users
 
 	return users, nil
