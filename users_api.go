@@ -7,8 +7,20 @@ import (
 	"net/http"
 )
 
-func GetUsers(term string) (string, error) {
-	r, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080", nil)
+type UserAPI struct {
+	Port, URL string
+}
+
+func NewUserAPI(url, port string) UserAPI {
+	return UserAPI{
+		Port: port,
+		URL: url,
+	}
+}
+
+func (api UserAPI) Search(term string) (string, error) {
+	uri := fmt.Sprintf("%s:%s", api.URL, api.Port)
+	r, err := http.NewRequest(http.MethodGet, uri, nil)
 	if err != nil {
 		return "", fmt.Errorf("get users: error creating request: %v", err)
 	}
