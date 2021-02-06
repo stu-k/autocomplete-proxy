@@ -17,7 +17,14 @@ func UsersController(userAPI userGetter) func(http.ResponseWriter, *http.Request
 			queries = []string{""}
 		}
 
-		usersJSON, err := userAPI.Search(queries[0])
+		users, err := userAPI.Search(queries[0])
+		if err != nil {
+			log.Print(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		usersJSON, err := users.JSON()
 		if err != nil {
 			log.Print(err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -29,5 +36,5 @@ func UsersController(userAPI userGetter) func(http.ResponseWriter, *http.Request
 }
 
 type userGetter interface {
-	Search(term string) (string, error)
+	Search(term string) (Users, error)
 }
