@@ -3,25 +3,41 @@ package main
 import (
 	"log"
 	"sync"
+	"time"
 )
 
+type UserCache struct {
+	createdAt time.Time
+	users Users
+}
+
+func (uc UserCache) Expired(now time.Time, expiry time.Duration) bool {
+	return uc.createdAt.Add(expiry).Before(now)
+}
+
 type Storage struct {
-	cache map[string]Users
+	cache map[string]UserCache
+	cacheExpiry time.Duration
 	mu sync.Mutex
 	fetcher userGetter
 }
 
-func NewStorage(fetcher userGetter) Storage {
+func NewStorage(fetcher userGetter, cacheExpiry time.Duration) Storage {
 	return Storage{
-		cache: make(map[string]Users),
+		cache: make(map[string]UserCache),
+		cacheExpiry: cacheExpiry,
 		fetcher: fetcher,
 	}
 }
 
 func (s Storage) Search(term string) (Users, error) {
-	if users, ok := s.cache[term]; ok {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	userCache, ok := s.cache[term]
+	if ok && !userCache.Expired(time.Now(), s.cacheExpiry) {
 		log.Printf("using cache for term %q", term)
-		return users, nil
+		return userCache.users, nil
 	}
 
 	log.Printf("fetching data for term %q", term)
@@ -34,7 +50,10 @@ func (s Storage) Search(term string) (Users, error) {
 		users = users.Refine(term)
 	}
 
-	s.cache[term] = users
+	s.cache[term] = UserCache{
+		createdAt: time.Now(),
+		users: users,
+	}
 
 	return users, nil
 }
