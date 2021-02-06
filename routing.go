@@ -11,7 +11,8 @@ func NewRouter(userAPI userGetter) http.Handler {
 	router.HandleFunc("/status", StatusController)
 
 	router.HandleFunc("/users", UsersController(userAPI)).
-		Methods(http.MethodGet)
+		Methods(http.MethodGet).
+		HeadersRegexp("Content-Type", "application/json")
 
 	return router
 }
