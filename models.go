@@ -15,7 +15,7 @@ type User struct {
 type Users []User
 
 func (u Users) Refine(term string) (result Users) {
-	otherMatches := Users{}
+	emailMatches, otherMatches := Users{}, Users{}
 
 	termL := strings.ToLower(term)
 	for _, user := range(u) {
@@ -32,12 +32,18 @@ func (u Users) Refine(term string) (result Users) {
 			continue
 		}
 
-		if strings.Contains(nameL, termL) || strings.Contains(user.Email, termL) {
+		if strings.Contains(user.Email, termL) {
+			emailMatches = append(emailMatches, user)
+		}
+
+		if strings.Contains(nameL, termL) {
 			otherMatches = append(otherMatches, user)
 		}
 	}
 
-	return append(result, otherMatches...)
+	result = append(result, emailMatches...)
+	result = append(result, otherMatches...)
+	return result
 }
 
 func (u Users) JSON() (string, error) {

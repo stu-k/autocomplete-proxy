@@ -34,6 +34,36 @@ func TestUsersRefine(t *testing.T) {
 				{ID: 1, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
 			},
 		},
+		{
+			name: "prioritizes email matches second",
+			term: "Brad",
+			users: Users{
+				{ID: 1, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
+				{ID: 2, Name: "Brad Pitt", Email: "joeblack@reepr.gov"},
+				{ID: 3, Name: "Marsha B", Email: "mbrady@boojan.com"},
+			},
+			want: Users{
+				{ID: 2, Name: "Brad Pitt", Email: "joeblack@reepr.gov"},
+				{ID: 3, Name: "Marsha B", Email: "mbrady@boojan.com"},
+				{ID: 1, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
+			},
+		},
+		{
+			name: "removes and sorts correctly",
+			term: "Brad",
+			users: Users{
+				{ID: 1, Name: "Aldous Huxley", Email: "happyhappy@soma.org"},
+				{ID: 2, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
+				{ID: 3, Name: "George Orwell", Email: "bbfan@peepme.gov"},
+				{ID: 4, Name: "Brad Pitt", Email: "joeblack@reepr.gov"},
+				{ID: 5, Name: "Marsha B", Email: "mbrady@boojan.com"},
+			},
+			want: Users{
+				{ID: 4, Name: "Brad Pitt", Email: "joeblack@reepr.gov"},
+				{ID: 5, Name: "Marsha B", Email: "mbrady@boojan.com"},
+				{ID: 2, Name: "Ray Bradbery", Email: "hotbooks@readingsux.edu"},
+			},
+		},
 	}
 
 	for _, tc := range(tt) {
